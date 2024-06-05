@@ -1,14 +1,10 @@
 <?php
 namespace App\Http\Requests\Auth;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFromRequest;
 
-class LoginRequest extends FormRequest
+class LoginRequest extends BaseFromRequest
 {
-    public function authorize()
-    {
-        return true;
-    }
 
     public function rules()
     {
