@@ -5,17 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Book extends Model
+class ReadingInterval extends Model
 {
     use HasFactory;
 
     protected $fillable=[
-        'name',
-        'num_of_pages'
+        'user_id',
+        'book_id',
+        'start_page',
+        'end_page'
     ];
-
-    public function readingIntervals()
-    {
-        return $this->hasMany(ReadingInterval::class);
-    }
 }

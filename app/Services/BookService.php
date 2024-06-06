@@ -2,17 +2,11 @@
 namespace App\Services;
 
 use App\Models\Book;
+use App\Models\ReadingInterval;
 
 class BookService
 {
-    public function getTopBooks()
-    {
-        return Book::withSum('readingIntervals', 'end_page - start_page + 1 as read_pages')
-            ->orderByDesc('read_pages')
-            ->take(5)
-            ->get();
-    }
-
+ 
     public function createBook(array $data)
     {
         return Book::create($data);
@@ -37,5 +31,35 @@ class BookService
     public function getBookById($id)
     {
         return Book::findOrFail($id);
+    }
+    public function storeReadingInterval($data)
+    {
+        return ReadingInterval::create($data);
+    }
+
+    public function getTopBooks()
+    {
+        $books = Book::with('readingIntervals')
+            ->get()
+            ->map(function ($book) {
+                $uniquePages = $this->calculateUniquePages($book->readingIntervals);
+                $book->unique_read_pages = $uniquePages;
+                return $book;
+            })
+            ->sortByDesc('unique_read_pages')
+            ->take(5);
+
+        return $books;
+    }
+
+    private function calculateUniquePages($intervals)
+    {
+        $pages = [];
+        foreach ($intervals as $interval) {
+            for ($i = $interval->start_page; $i <= $interval->end_page; $i++) {
+                $pages[$i] = true;
+            }
+        }
+        return count($pages);
     }
 }

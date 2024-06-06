@@ -22,6 +22,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::middleware(['auth:sanctum'])->prefix('books')->group(function () {
+
+    Route::post('/reading-intervals', [BookController::class, 'storeIntervals']);
+    Route::get('/recommendations', [BookController::class, 'recommendations']);
+});
+
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::resource('books', BookController::class);
 });
